@@ -1,0 +1,12 @@
+.comma-list {
+    
+    &:after {
+        content: ', ';
+    }
+    
+    &:last-child {
+        &:after {
+            content: '';
+        }
+    }
+}

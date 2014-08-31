@@ -1,0 +1,14 @@
+<h3>{{country.name}}</span></h3>
+<h4 ng-if="country.nativeName.length">({{country.nativeName}})</h4>
+<dl>
+    <dt>Country Code (Alpha 2)</dt>
+    <dd>{{country.cca2}}</dd>
+    <dt>Country Code (Alpha 3)</dt>
+    <dd>{{country.cca3}}</dd>
+    <dt>Currencies</dt>
+    <dd><span class="comma-list" ng-repeat="currency in country.currency">{{currency}}</span></dd>
+    <dt>Int. dial code(s)</dt>
+    <dd><span class="comma-list" ng-repeat="code in country.callingCode">{{code}}</span></dd>
+    <dt>Languages</dt>
+    <dd><span class="comma-list" ng-repeat="l in country.languageCodes">{{l}}</span></dd>
+</dl>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:ng="http://angularjs.org" id="ng-app" ng-app="country-interface">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Countries of the world</title>
+    
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/style.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container" ng-controller="CountryController" ng-init="index('')">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Search for a country</h1>
+                <form role="form">
+                    <input type="text" class="form-control" id="search-box" placeholder="Enter country name" ng-model="searchTerm">
+                </form>
+            </div>
+        </div>
+        
+        <div class="row" ng-cloak>
+            <div class="col-md-4" ng-repeat="c in countries | search:searchTerm">
+                <country-summary country="c"></country-summary>
+            </div>
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-animate.min.js"></script>
+    <script type="text/javascript" src="/js/script.js"></script>
+  </body>
+</html>

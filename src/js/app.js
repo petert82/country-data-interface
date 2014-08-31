@@ -1,0 +1,1 @@
+angular.module('country-interface', ['ci.countries']);
