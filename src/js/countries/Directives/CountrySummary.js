@@ -6,7 +6,8 @@ directive('countrySummary', [function() {
         },
         restrict: 'E',
         scope: {
-            country: '='
+            country: '=',
+            select: '&onSelect'
         },
         templateUrl: '/template/countrySummaryDirective.html'
     };

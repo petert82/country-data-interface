@@ -1,4 +1,11 @@
-angular.module('country-interface', ['ci.countries']);;
+angular.module('country-interface', ['ngRoute', 'ci.countries']).
+
+config(['$routeProvider', function($routeProvider) {
+    $routeProvider.
+        when('/country/:cca3', {controller: 'CountryDetailController', templateUrl: 'template/countryDetail.html'}).
+        when('/search/:search', {controller: 'CountryIndexController', templateUrl: 'template/countryIndex.html'}).
+        otherwise({controller: 'CountryIndexController', templateUrl: 'template/countryIndex.html'});
+}]);;
 angular.module('ci.countries',['ci.countries.controllers',
                                'ci.countries.directives',
                                'ci.countries.filters',
@@ -10,17 +17,32 @@ angular.module('ci.countries.directives',[]);
 angular.module('ci.countries.filters',[]);
 angular.module('ci.countries.services',[]);;
 angular.module('ci.countries.controllers').
-controller('CountryController', ['$scope', 'CountryService', function($scope, CountryService) {
+controller('CountryDetailController', ['$scope', '$routeParams', 'CountryService', function($scope, $routeParams, CountryService) {
+    $scope.country = {};
     
-    $scope.index = function(searchTerm) {
+    CountryService.find($routeParams.cca3).then(function(country) {
+        $scope.country = country;
+    });
+}]);;
+angular.module('ci.countries.controllers').
+controller('CountryIndexController', ['$scope', '$location', '$routeParams', 'CountryService', 
+    function($scope, $location, $routeParams, CountryService) {
         $scope.countries = [];
-        $scope.searchTerm = searchTerm;
+        
+        if ($routeParams.search) {
+            $scope.searchTerm = $routeParams.search;
+        } else {
+            $scope.searchTerm = '';
+        }
         
         CountryService.query().then(function(list) {
             $scope.countries = list;
         });
-    };
-}]);;
+        
+        $scope.showDetail = function(country) {
+            $location.path('/country/'+country.cca3);
+        };
+    }]);;
 angular.module('ci.countries.services').
 factory('CountryService', ['$http', '$q', function($http, $q) {
     return {
@@ -37,6 +59,23 @@ factory('CountryService', ['$http', '$q', function($http, $q) {
                 });
             
             return deferred.promise;
+        },
+        find: function(cca3) {
+            var deferred = $q.defer();
+            
+            cca3 = cca3.toUpperCase();
+            
+            this.query().then(function(list) {
+                angular.forEach(list, function(country) {
+                    if (cca3 === country.cca3) {
+                        deferred.resolve(country);
+                    }
+                });
+                
+                deferred.resolve({});
+            });
+            
+            return deferred.promise;
         }
     };
 }]);;
@@ -48,7 +87,8 @@ directive('countrySummary', [function() {
         },
         restrict: 'E',
         scope: {
-            country: '='
+            country: '=',
+            select: '&onSelect'
         },
         templateUrl: '/template/countrySummaryDirective.html'
     };

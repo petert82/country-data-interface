@@ -10,25 +10,12 @@
     <link href="css/style.min.css" rel="stylesheet">
   </head>
   <body>
-    <div class="container" ng-controller="CountryController" ng-init="index('')">
-        <div class="row">
-            <div class="col-md-12">
-                <h1>Search for a country</h1>
-                <form role="form">
-                    <input type="text" class="form-control" id="search-box" placeholder="Enter country name" ng-model="searchTerm">
-                </form>
-            </div>
-        </div>
-        
-        <div class="row" ng-cloak>
-            <div class="col-md-4" ng-repeat="c in countries | search:searchTerm">
-                <country-summary country="c"></country-summary>
-            </div>
-        </div>
-    </div>
+  
+    <div class="container" ng-view></div>
     
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-animate.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular-animate.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular-route.min.js"></script>
     <script type="text/javascript" src="/js/script.js"></script>
   </body>
 </html>

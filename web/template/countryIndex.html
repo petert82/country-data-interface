@@ -1,0 +1,14 @@
+<div class="row">
+    <div class="col-md-12">
+        <h1>Search for a country</h1>
+        <form role="form">
+            <input type="text" class="form-control" id="search-box" placeholder="Enter country name" ng-model="searchTerm">
+        </form>
+    </div>
+</div>
+
+<div class="row" ng-cloak>
+    <div class="col-md-4" ng-repeat="c in countries | search:searchTerm">
+        <country-summary country="c" on-select="showDetail(c)"></country-summary>
+    </div>
+</div>
