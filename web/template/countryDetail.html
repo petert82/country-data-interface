@@ -119,6 +119,8 @@
     </div>
     
     <div class="col-md-4 fake-heading" ng-if="country.cca3">
-        <img ng-src="/data/flags/{{ country.cca3.toLowerCase() }}.svg" alt="{{ country.name }} flag" class="img-responsive">
+        <img ng-src="/data/flags/{{ country.cca3.toLowerCase() }}.svg" alt="{{ country.name }} flag" class="img-responsive country-flag">
+        
+        <map-view center="country.latlng"></map-view>
     </div>
 </div>

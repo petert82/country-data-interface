@@ -26,7 +26,9 @@ module.exports = function(grunt) {
             src:[
                   'src/js/*.js', // app.js
                   'src/js/Countries/CountriesModule.js',
-                  'src/js/Countries/**/*.js'
+                  'src/js/Countries/**/*.js',
+                  'src/js/Maps/MapsModule.js',
+                  'src/js/Maps/**/*.js'
             ],
             dest: 'web/js/script.js'
         }

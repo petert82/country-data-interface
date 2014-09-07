@@ -1,4 +1,4 @@
-angular.module('country-interface', ['ngRoute', 'ci.countries']).
+angular.module('country-interface', ['ngRoute', 'ci.countries', 'ci.maps']).
 
 config(['$routeProvider', function($routeProvider) {
     $routeProvider.

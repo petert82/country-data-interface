@@ -1,4 +1,4 @@
-angular.module('country-interface', ['ngRoute', 'ci.countries']).
+angular.module('country-interface', ['ngRoute', 'ci.countries', 'ci.maps']).
 
 config(['$routeProvider', function($routeProvider) {
     $routeProvider.
@@ -61,51 +61,6 @@ controller('CountryIndexController', ['$scope', '$location', '$routeParams', 'Co
             $location.path('/country/'+country.cca3);
         };
     }]);;
-angular.module('ci.countries.services').
-factory('CountryService', ['$http', '$q', function($http, $q) {
-    return {
-        /**
-         * Gets a list of all countries.
-         * @return {Promise}
-         */
-        query: function() {
-            var deferred = $q.defer();
-            
-            $http.
-                get('/data/countries.json', {cache: true}).
-                success(function(data) {
-                    deferred.resolve(data);
-                }).
-                error(function(data) {
-                    deferred.resolve([]);
-                });
-            
-            return deferred.promise;
-        },
-        /**
-         * Gets information for a single country.
-         * @param  {string}  cca3 Alpha-3 country code
-         * @return {Promise}
-         */
-        find: function(cca3) {
-            var deferred = $q.defer();
-            
-            cca3 = cca3.toUpperCase();
-            
-            this.query().then(function(list) {
-                angular.forEach(list, function(country) {
-                    if (cca3 === country.cca3) {
-                        deferred.resolve(country);
-                    }
-                });
-                
-                deferred.resolve({});
-            });
-            
-            return deferred.promise;
-        }
-    };
-}]);;
 angular.module('ci.countries.directives').
 directive('countrySummary', [function() {
     return {
@@ -162,4 +117,84 @@ filter('search', function() {
         
         return filtered;
     };
-});
+});;
+angular.module('ci.countries.services').
+factory('CountryService', ['$http', '$q', function($http, $q) {
+    return {
+        /**
+         * Gets a list of all countries.
+         * @return {Promise}
+         */
+        query: function() {
+            var deferred = $q.defer();
+            
+            $http.
+                get('/data/countries.json', {cache: true}).
+                success(function(data) {
+                    deferred.resolve(data);
+                }).
+                error(function(data) {
+                    deferred.resolve([]);
+                });
+            
+            return deferred.promise;
+        },
+        /**
+         * Gets information for a single country.
+         * @param  {string}  cca3 Alpha-3 country code
+         * @return {Promise}
+         */
+        find: function(cca3) {
+            var deferred = $q.defer();
+            
+            cca3 = cca3.toUpperCase();
+            
+            this.query().then(function(list) {
+                angular.forEach(list, function(country) {
+                    if (cca3 === country.cca3) {
+                        deferred.resolve(country);
+                    }
+                });
+                
+                deferred.resolve({});
+            });
+            
+            return deferred.promise;
+        }
+    };
+}]);;
+angular.module('ci.maps',['ci.maps.directives',
+                          'ci.maps.services']);
+
+// Init sub-modules
+angular.module('ci.maps.directives',[]);
+angular.module('ci.maps.services',[]);;
+angular.module('ci.countries.directives').
+directive('mapView', ['$timeout', 'LeafletService', function($timeout, L) {
+    return {
+        link: function(scope, element, attrs) {
+            var map;
+            
+            $timeout(function() {
+                var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    attrib = 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+                
+                map = L.map('map-view').setView([scope.center[0], scope.center[1]], 3);
+                
+                L.tileLayer(osmUrl, {
+                    attribution: attrib,
+                    maxZoom: 18
+                }).addTo(map);
+            });
+        },
+        restrict: 'E',
+        scope: {
+            center: '='
+        },
+        templateUrl: '/template/mapViewDirective.html'
+    };
+}]);;
+angular.module('ci.maps.services').
+factory('LeafletService', ['$window', function($window) {
+    return $window.L;
+}]);

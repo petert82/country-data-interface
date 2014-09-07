@@ -6169,6 +6169,10 @@ button.close {
 .comma-list:last-child:after {
   content: '';
 }
+#map-view {
+  height: 300px;
+  margin-top: 20px;
+}
 .clickable:hover {
   cursor: pointer;
 }
