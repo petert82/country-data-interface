@@ -1,2 +1,4 @@
 node_modules/
-web/js/countries.js
+web/data/countries.json
+web/data/flags/*.svg
+web/data/geo/*.json
