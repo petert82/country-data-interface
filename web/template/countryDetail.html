@@ -97,7 +97,7 @@
                         <td>{{ country.demonym }}</td>
                     </tr>
                     <tr>
-                        <th>Coordinates</th>
+                        <th>Lat/Lng</th>
                         <td><a ng-href="{{ country.osmUrl }}">{{country.latlng[0]}}, {{country.latlng[1]}}</a></td>
                     </tr>
                     <tr ng-show="country.area > 0">
@@ -121,6 +121,6 @@
     <div class="col-md-4 fake-heading" ng-if="country.cca3">
         <img ng-src="/data/flags/{{ country.cca3.toLowerCase() }}.svg" alt="{{ country.name }} flag" class="img-responsive country-flag">
         
-        <map-view center="country.latlng"></map-view>
+        <map-view center="country.latlng" geo-json="geoData"></map-view>
     </div>
 </div>

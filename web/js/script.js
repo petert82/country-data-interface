@@ -19,13 +19,23 @@ angular.module('ci.countries.services',[]);;
 angular.module('ci.countries.controllers').
 controller('CountryDetailController', ['$scope', '$routeParams', 'CountryService', function($scope, $routeParams, CountryService) {
     $scope.country = {};
+    $scope.geoData = null;
     $scope.shouldShowTranslations = false;
     
+    // Load the country data
     CountryService.find($routeParams.cca3).then(function(country) {
         $scope.country = country;
         $scope.country.osmUrl = getOsmUrl();
     });
     
+    // Load the country's GeoJSON data
+    CountryService.findGeoData($routeParams.cca3).then(function(geoData) {
+        $scope.geoData = geoData;
+    });
+    
+    /**
+     * Display/hide translations of the country's name.
+     */
     $scope.toggleTranslations = function() {
         $scope.shouldShowTranslations = !$scope.shouldShowTranslations;
     };
@@ -141,8 +151,8 @@ factory('CountryService', ['$http', '$q', function($http, $q) {
         },
         /**
          * Gets information for a single country.
-         * @param  {string}  cca3 Alpha-3 country code
-         * @return {Promise}
+         * @param  {string}  cca3 Alpha-3 country code.
+         * @return {Promise}      Resolves to data for a single country.
          */
         find: function(cca3) {
             var deferred = $q.defer();
@@ -160,6 +170,27 @@ factory('CountryService', ['$http', '$q', function($http, $q) {
             });
             
             return deferred.promise;
+        },
+        /**
+         * Gets GeoJSON data for the given country.
+         * @param  {string}  cca3 Alpha-3 country code.
+         * @return {Promise}      Resolves to GeoJSON object.
+         */
+        findGeoData: function(cca3) {
+            var deferred = $q.defer();
+            
+            cca3 = cca3.toLowerCase();
+            
+            $http.
+                get('/data/geo/'+cca3+'.geo.json', {cache: true}).
+                success(function(data) {
+                    deferred.resolve(data);
+                }).
+                error(function(data) {
+                    deferred.resolve(null);
+                });
+            
+            return deferred.promise;
         }
     };
 }]);;
@@ -171,25 +202,47 @@ angular.module('ci.maps.directives',[]);
 angular.module('ci.maps.services',[]);;
 angular.module('ci.countries.directives').
 directive('mapView', ['$timeout', 'LeafletService', function($timeout, L) {
+    /**
+     * Add a GeoJSON layer to the given map.
+     * @param {Map}    map     A leaflet map.
+     * @param {Object} geoJson GeoJSON data.
+     */
+    var addGeoJsonLayer = function(map, geoJson) {
+        var geoLayer;
+        
+        if (!map || !geoJson) {
+            return null;
+        }
+        
+        // GeoJSON layer
+        geoLayer = L.geoJson().addTo(map);
+        geoLayer.addData(geoJson);
+        
+        return geoLayer;
+    };
+    
     return {
         link: function(scope, element, attrs) {
-            var map;
+            var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                attrib = 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+                map;
             
-            $timeout(function() {
-                var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                    attrib = 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
-                
-                map = L.map('map-view').setView([scope.center[0], scope.center[1]], 3);
-                
-                L.tileLayer(osmUrl, {
-                    attribution: attrib,
-                    maxZoom: 18
-                }).addTo(map);
+            // Basic map setup
+            map = L.map('map-view').setView([scope.center[0], scope.center[1]], 3);
+            L.tileLayer(osmUrl, {
+                attribution: attrib,
+                maxZoom: 18
+            }).addTo(map);
+            
+            // Add GeoJSON, data when available
+            scope.$watch('geoJson', function(geoJson) {
+                addGeoJsonLayer(map, geoJson);
             });
         },
         restrict: 'E',
         scope: {
-            center: '='
+            center: '=',
+            geoJson: '='
         },
         templateUrl: '/template/mapViewDirective.html'
     };

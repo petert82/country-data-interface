@@ -1,13 +1,23 @@
 angular.module('ci.countries.controllers').
 controller('CountryDetailController', ['$scope', '$routeParams', 'CountryService', function($scope, $routeParams, CountryService) {
     $scope.country = {};
+    $scope.geoData = null;
     $scope.shouldShowTranslations = false;
     
+    // Load the country data
     CountryService.find($routeParams.cca3).then(function(country) {
         $scope.country = country;
         $scope.country.osmUrl = getOsmUrl();
     });
     
+    // Load the country's GeoJSON data
+    CountryService.findGeoData($routeParams.cca3).then(function(geoData) {
+        $scope.geoData = geoData;
+    });
+    
+    /**
+     * Display/hide translations of the country's name.
+     */
     $scope.toggleTranslations = function() {
         $scope.shouldShowTranslations = !$scope.shouldShowTranslations;
     };
