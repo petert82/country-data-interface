@@ -45,6 +45,8 @@ directive('mapView', ['$timeout', 'LeafletService', function($timeout, L) {
                     map.fitBounds(geoLayer.getBounds());
                 }
             });
+            
+            scope.mapHeight = 300;
         },
         restrict: 'E',
         scope: {
