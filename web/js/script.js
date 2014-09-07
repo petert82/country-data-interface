@@ -201,6 +201,10 @@ angular.module('ci.maps',['ci.maps.directives',
 angular.module('ci.maps.directives',[]);
 angular.module('ci.maps.services',[]);;
 angular.module('ci.countries.directives').
+/**
+ * Displays a map centered on a given point and optionally including a GeoJSON
+ * layer.
+ */
 directive('mapView', ['$timeout', 'LeafletService', function($timeout, L) {
     /**
      * Add a GeoJSON layer to the given map.
@@ -236,7 +240,12 @@ directive('mapView', ['$timeout', 'LeafletService', function($timeout, L) {
             
             // Add GeoJSON, data when available
             scope.$watch('geoJson', function(geoJson) {
-                addGeoJsonLayer(map, geoJson);
+                var geoLayer = addGeoJsonLayer(map, geoJson);
+                
+                // Zoom to fit country in view
+                if (geoLayer) {
+                    map.fitBounds(geoLayer.getBounds());
+                }
             });
         },
         restrict: 'E',
