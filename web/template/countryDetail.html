@@ -107,10 +107,10 @@
                     <tr>
                         <th>Land borders</th>
                         <td>
-                            <span ng-repeat="border in country.borders" class="comma-list" ng-show="country.borders.length">
+                            <span ng-repeat="border in country.borders" class="comma-list" ng-if="country.borders.length">
                                 <a ng-href="/#/country/{{border}}">{{ border }}</a>
                             </span>
-                            <span ng-show="!country.borders.length">N/A</span>
+                            <span ng-if="!country.borders.length">N/A</span>
                         </td>
                     </tr>
                 </tbody>
