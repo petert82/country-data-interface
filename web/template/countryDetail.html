@@ -4,7 +4,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
         <h2>Names</h2>
         <div class="table-responsive">
             <table class="table table-bordered">
@@ -21,10 +21,10 @@
                         <th>Alternative spellings</th>
                         <td><span ng-repeat="altSpelling in country.altSpellings" class="comma-list">{{ altSpelling }}</span></td>
                     </tr>
-                    <tr>
-                        <th colspan="2">Translations</th>
+                    <tr ng-click="toggleTranslations()" class="clickable">
+                        <th colspan="2">Translations <i class="fa fa-angle-double-down pull-right"></i></th>
                     </tr>
-                    <tr ng-repeat="(lang, translation) in country.translations">
+                    <tr ng-repeat="(lang, translation) in country.translations" ng-show="shouldShowTranslations">
                         <th>{{ lang }}</th>
                         <td>{{ translation }}</td>
                     </tr>
@@ -61,7 +61,9 @@
                 </tr>
             </table>
         </div>
-        
+    </div>
+    
+    <div class="col-md-4">
         <h2>Language</h2>
         <div class="table-responsive">
             <table class="table table-bordered">
@@ -114,5 +116,9 @@
                 </tbody>
             </table>
         </div>
+    </div>
+    
+    <div class="col-md-4 fake-heading" ng-if="country.cca3">
+        <img ng-src="/data/flags/{{ country.cca3.toLowerCase() }}.svg" alt="{{ country.name }} flag" class="img-responsive">
     </div>
 </div>
