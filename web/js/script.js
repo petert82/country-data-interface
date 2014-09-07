@@ -67,7 +67,7 @@ factory('CountryService', ['$http', '$q', function($http, $q) {
             var deferred = $q.defer();
             
             $http.
-                get('/js/countries.json', {cache: true}).
+                get('/data/countries.json', {cache: true}).
                 success(function(data) {
                     deferred.resolve(data);
                 }).
