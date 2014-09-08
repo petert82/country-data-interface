@@ -8,6 +8,7 @@ controller('CountryDetailController', ['$scope', '$routeParams', 'CountryService
     CountryService.find($routeParams.cca3).then(function(country) {
         $scope.country = country;
         $scope.country.osmUrl = getOsmUrl();
+        $scope.page.setTitle($scope.country.name);
     });
     
     // Load the country's GeoJSON data
