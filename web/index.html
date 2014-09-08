@@ -12,7 +12,7 @@
     <link href="css/style.min.css" rel="stylesheet">
   </head>
   <body>
-    <nav class="navbar navbar-default" role="navigation">
+    <nav class="navbar navbar-default navbar-static-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
                 <a href="/#/" class="navbar-brand">Countries of the World</a>
@@ -25,6 +25,14 @@
     </nav>
   
     <div class="container" ng-view autoscroll=""></div>
+    
+    <div class="container">
+        <div class="row">
+            <footer class="col-md-12">
+                <small>Copyright &copy; 2014 Peter Thompson</small>
+            </footer>
+        </div>
+    </div>
     
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.js"></script>
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular-animate.min.js"></script>
