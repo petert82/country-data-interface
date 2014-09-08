@@ -4,14 +4,15 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Countries of the world</title>
+    <meta name="description" content="A searchable list of data on the countries and regions of the world.">
+    <title ng-bind="page.title">Countries of the world</title>
     
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="//cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" rel="stylesheet" >
     <link href="css/style.min.css" rel="stylesheet">
   </head>
   <body>
-    <nav class="navbar navbar-default" role="navigation">
+    <nav class="navbar navbar-default navbar-static-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
                 <a href="/#/" class="navbar-brand">Countries of the World</a>
@@ -24,6 +25,14 @@
     </nav>
   
     <div class="container" ng-view autoscroll=""></div>
+    
+    <div class="container">
+        <div class="row">
+            <footer class="col-md-12">
+                <small>Copyright &copy; 2014 Peter Thompson</small>
+            </footer>
+        </div>
+    </div>
     
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.js"></script>
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular-animate.min.js"></script>

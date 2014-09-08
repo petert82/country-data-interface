@@ -1,14 +1,35 @@
-<h3>{{country.name}} <button type="button" class="btn btn-default" ng-click="select()"><i class="fa fa-search"></i></button></h3>
-<h4 ng-if="country.nativeName.length">({{country.nativeName}})</h4>
-<dl>
-    <dt>Country Code (Alpha 2)</dt>
-    <dd>{{country.cca2}}</dd>
-    <dt>Country Code (Alpha 3)</dt>
-    <dd>{{country.cca3}}</dd>
-    <dt>Currencies</dt>
-    <dd><span class="comma-list" ng-repeat="currency in country.currency">{{currency}}</span></dd>
-    <dt>Int. dial code(s)</dt>
-    <dd><span class="comma-list" ng-repeat="code in country.callingCode">{{code}}</span></dd>
-    <dt>Languages</dt>
-    <dd><span class="comma-list" ng-repeat="l in country.languageCodes">{{l}}</span></dd>
-</dl>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{country.name}} <button type="button" class="btn btn-default" ng-click="select()"><i class="fa fa-search"></i></button></h3>
+    </div>
+    <table class="table">
+        <tbody>
+            <tr ng-if="country.nativeName.length">
+                <th colspan="2">({{country.nativeName}})</th>
+            </tr>
+            <tr>
+                <th>Country Code (Alpha 2)</th>
+                <td>{{country.cca2}}</td>
+            </tr>
+            <tr>
+                <th>Country Code (Alpha 3)</th>
+                <td>{{country.cca3}}</td>
+            </tr>
+            <tr>
+                <th>
+                    <span ng-show="country.currency.length < 2">Currency</span>
+                    <span ng-show="country.currency.length > 1">Currencies</span>
+                </th>
+                <td><span class="comma-list" ng-repeat="currency in country.currency">{{currency}}</span></td>
+            </tr>
+            <tr>
+                <th>Int. dial code<span ng-show="country.callingCode.length > 1">s</span></th>
+                <td><span class="comma-list" ng-repeat="code in country.callingCode">{{code}}</span></td>
+            </tr>
+            <tr>
+                <th>Language<span ng-show="country.languageCodes.length > 1">s</span></th>
+                <td><span class="comma-list" ng-repeat="l in country.languageCodes">{{l}}</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
