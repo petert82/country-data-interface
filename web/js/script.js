@@ -61,7 +61,8 @@ controller('CountryDetailController', ['$scope', '$routeParams', 'CountryService
     CountryService.find($routeParams.cca3).then(function(country) {
         $scope.country = country;
         $scope.country.osmUrl = getOsmUrl();
-        $scope.page.setTitle($scope.country.name);
+        $scope.country.hasLanguages = hasLanguages();
+        $scope.page.setTitle($scope.country.name.common);
     });
     
     // Load the country's GeoJSON data
@@ -86,6 +87,10 @@ controller('CountryDetailController', ['$scope', '$routeParams', 'CountryService
         zoomLevel = 5;
         
         return "http://www.openstreetmap.org/#map=5/"+lat+"/"+lng;
+    };
+    
+    var hasLanguages = function() {
+        return !(angular.equals($scope.country.languages, {}) || angular.equals($scope.country.languages, []));
     };
 }]);;
 angular.module('ci.countries.controllers').
@@ -146,9 +151,9 @@ filter('search', function() {
         
         angular.forEach(input, function(country) {
             
-            if (matches(country.name)) {
+            if (matches(country.name.common)) {
                 filtered.push(country);
-            } else if (matches(country.nativeName)) {
+            } else if (matches(country.name.native.common)) {
                 filtered.push(country);
             } else if (search.length <= 2 && matches(country.cca2)) {
                 filtered.push(country);

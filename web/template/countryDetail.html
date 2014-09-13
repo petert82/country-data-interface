@@ -1,11 +1,11 @@
 <div class="row">
     <ol class="breadcrumb">
         <li><a href="/#/">Search</a></li>
-        <li class="active">{{ country.name }}</li>
+        <li class="active">{{ country.name.common }}</li>
     </ol>
     
     <div class="col-md-12">
-        <h1>{{ country.name }}</h1>
+        <h1>{{ country.name.common }}</h1>
     </div>
 </div>
 <div class="row">
@@ -15,12 +15,20 @@
             <table class="table table-bordered">
                 <tbody>
                     <tr>
-                        <th>Name</th>
-                        <td>{{country.name}}</td>
+                        <th>Common</th>
+                        <td>{{country.name.common}}</td>
                     </tr>
                     <tr>
-                        <th>Native name</th>
-                        <td>{{ country.nativeName }}</td>
+                        <th>Official</th>
+                        <td>{{country.name.official}}</td>
+                    </tr>
+                    <tr>
+                        <th>Common (Native)</th>
+                        <td>{{ country.name.native.common }}</td>
+                    </tr>
+                    <tr>
+                        <th>Official (Native)</th>
+                        <td>{{ country.name.native.official }}</td>
                     </tr>
                     <tr>
                         <th>Alternative spellings</th>
@@ -73,13 +81,19 @@
         <div class="table-responsive">
             <table class="table table-bordered">
                 <tbody>
-                    <tr>
-                        <th>ISO 639-1 code<span ng-show="country.languageCodes.length > 1">s</span></th>
-                        <td><span ng-repeat="langCode in country.languageCodes" class="comma-list">{{ langCode }}</span></td>
+                    <tr ng-if="country.nativeLanguage.length">
+                        <th>Native language</th>
+                        <td>{{ country.languages[country.nativeLanguage] }}</td>
                     </tr>
                     <tr>
-                        <th>Name<span ng-show="country.language.length > 1">s</span></th>
-                        <td><span ng-repeat="lang in country.language" class="comma-list">{{ lang }}</span></td>
+                        <th colspan="2">Languages</th>
+                    </tr>
+                    <tr ng-repeat="(code, lang) in country.languages">
+                        <th>{{ code }}</th>
+                        <td>{{ lang }}</td>
+                    </tr>
+                    <tr ng-if="!country.hasLanguages">
+                        <td colspan="2"><i>No language data available</i></td>
                     </tr>
                 </tbody>
             </table>

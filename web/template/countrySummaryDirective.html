@@ -1,11 +1,11 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">{{country.name}} <button type="button" class="btn btn-default" ng-click="select()"><i class="fa fa-search"></i></button></h3>
+        <h3 class="panel-title">{{country.name.common}} <button type="button" class="btn btn-default" ng-click="select()"><i class="fa fa-search"></i></button></h3>
     </div>
     <table class="table">
         <tbody>
-            <tr ng-if="country.nativeName.length">
-                <th colspan="2">({{country.nativeName}})</th>
+            <tr ng-if="country.name.native.common">
+                <th colspan="2">({{country.name.native.common}})</th>
             </tr>
             <tr>
                 <th>Country Code (Alpha 2)</th>
