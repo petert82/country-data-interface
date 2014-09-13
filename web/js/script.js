@@ -244,19 +244,29 @@ angular.module('ci.countries.directives').
 directive('mapView', ['$timeout', 'LeafletService', function($timeout, L) {
     /**
      * Add a GeoJSON layer to the given map.
-     * @param {Map}    map     A leaflet map.
-     * @param {Object} geoJson GeoJSON data.
+     * @param {Map}    map             A leaflet map.
+     * @param {Object} geoJson         GeoJSON data.
+     * @param {bool}   fitMapToFeature Should the map bounds be adjusted to fit the GeoJSON feature?
      */
-    var addGeoJsonLayer = function(map, geoJson) {
+    var addGeoJsonLayer = function(map, geoJson, fitMapToFeature) {
         var geoLayer;
         
         if (!map || !geoJson) {
             return null;
         }
         
-        // GeoJSON layer
-        geoLayer = L.geoJson().addTo(map);
-        geoLayer.addData(geoJson);
+        map.whenReady(function() {
+            geoLayer = L.geoJson().addTo(map);
+            geoLayer.addData(geoJson);
+                
+            if (fitMapToFeature) {
+                // This timeout is an attempt to avoid an issue where the map control becomes
+                // unresponsive.
+                $timeout(function() {
+                    map.fitBounds(geoLayer.getBounds());
+                }, 10);
+            }
+        });
         
         return geoLayer;
     };
@@ -276,12 +286,7 @@ directive('mapView', ['$timeout', 'LeafletService', function($timeout, L) {
             
             // Add GeoJSON, data when available
             scope.$watch('geoJson', function(geoJson) {
-                var geoLayer = addGeoJsonLayer(map, geoJson);
-                
-                // Zoom to fit country in view
-                if (geoLayer) {
-                    map.fitBounds(geoLayer.getBounds());
-                }
+                var geoLayer = addGeoJsonLayer(map, geoJson, true);
             });
             
             scope.mapHeight = 300;
