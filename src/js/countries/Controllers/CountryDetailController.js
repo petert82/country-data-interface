@@ -36,6 +36,10 @@ controller('CountryDetailController', ['$scope', '$routeParams', 'CountryService
         return "http://www.openstreetmap.org/#map=5/"+lat+"/"+lng;
     };
     
+    /**
+     * Indicates whether the current country has at least one language.
+     * @return {Boolean} True if the country has at least one language.
+     */
     var hasLanguages = function() {
         return !(angular.equals($scope.country.languages, {}) || angular.equals($scope.country.languages, []));
     };
