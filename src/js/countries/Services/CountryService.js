@@ -49,12 +49,30 @@ factory('CountryService', ['$http', '$q', function($http, $q) {
         findGeoData: function(cca3) {
             var deferred = $q.defer();
             
+            // Checks we have some geometery available, assumes the top-level object is a 
+            // FeatureCollection
+            var hasGeometry = function(data) {
+                if (typeof data.features === 'undefined') {
+                    return false;
+                }
+                
+                if (!data.features.length) {
+                    return false;
+                }
+                
+                if (typeof data.features[0].geometry === 'undefined') {
+                    return false;
+                }
+                
+                return true;
+            };
+            
             cca3 = cca3.toLowerCase();
             
             $http.
                 get('/data/geo/'+cca3+'.geo.json', {cache: true}).
                 success(function(data) {
-                    deferred.resolve(data);
+                    deferred.resolve(hasGeometry(data) ? data : null);
                 }).
                 error(function(data) {
                     deferred.resolve(null);
