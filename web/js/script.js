@@ -135,6 +135,20 @@ directive('countrySummary', [function() {
     };
 }]);;
 angular.module('ci.countries.filters').
+filter('ifEmpty', [function() {
+    return function(input, alt) {
+        if (typeof input === 'undefined') {
+            return alt;
+        }
+        
+        if (!input.length) {
+            return alt;
+        }
+        
+        return input;
+    };
+}]);;
+angular.module('ci.countries.filters').
 filter('search', function() {
     return function(input, search) {
         var filtered = [];
