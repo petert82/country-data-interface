@@ -17,7 +17,8 @@ To setup a usable version of this site:
     1. Copy the `countries.json` file to `web/data/`.
     2. Copy all of the `data/*geo.json` files to `web/data/geo/`.
     3. Copy all of the `data/*.svg` files to `web/data/flags`.
-3. There is no step three.
+3. If you'd have a Google Analytics code you'd like to use with the site, run `bin/deploy -g {Your tracking code here}`.
+4. There is no step four.
 
 ## Credits
 
