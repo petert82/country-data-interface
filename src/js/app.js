@@ -1,4 +1,4 @@
-angular.module('country-interface', ['ngRoute', 'ci.countries', 'ci.maps']).
+angular.module('country-interface', ['ngRoute', 'ci.common', 'ci.countries', 'ci.maps']).
 
 config(['$routeProvider', function($routeProvider) {
     $routeProvider.
@@ -20,7 +20,7 @@ config(['$routeProvider', function($routeProvider) {
             templateUrl: 'template/countryIndex.html'
         });
 }]).
-run(['$rootScope', function($rootScope) {
+run(['$rootScope', '$location', 'AnalyticsService', function($rootScope, $location, AnalyticsService) {
     var defaultTitle = 'Countries of the World';
     
     // Enable changing the page title
@@ -30,7 +30,7 @@ run(['$rootScope', function($rootScope) {
         }
     };
     
-    // Set page title when route changes
+    // Set page title and report to Google Analytics when route changes
     $rootScope.$on('$routeChangeSuccess', function(event, current, previous) {
         var title = defaultTitle;
         
@@ -39,5 +39,7 @@ run(['$rootScope', function($rootScope) {
         }
         
         $rootScope.page.setTitle(title);
+        
+        AnalyticsService.track($location.path());
     });
 }]);
