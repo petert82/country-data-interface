@@ -1,4 +1,4 @@
-angular.module('country-interface', ['ngRoute', 'ci.countries', 'ci.maps']).
+angular.module('country-interface', ['ngRoute', 'ci.common', 'ci.countries', 'ci.maps']).
 
 config(['$routeProvider', function($routeProvider) {
     $routeProvider.
@@ -20,7 +20,7 @@ config(['$routeProvider', function($routeProvider) {
             templateUrl: 'template/countryIndex.html'
         });
 }]).
-run(['$rootScope', function($rootScope) {
+run(['$rootScope', '$location', 'AnalyticsService', function($rootScope, $location, AnalyticsService) {
     var defaultTitle = 'Countries of the World';
     
     // Enable changing the page title
@@ -30,7 +30,7 @@ run(['$rootScope', function($rootScope) {
         }
     };
     
-    // Set page title when route changes
+    // Set page title and report to Google Analytics when route changes
     $rootScope.$on('$routeChangeSuccess', function(event, current, previous) {
         var title = defaultTitle;
         
@@ -39,7 +39,38 @@ run(['$rootScope', function($rootScope) {
         }
         
         $rootScope.page.setTitle(title);
+        
+        AnalyticsService.track($location.path());
     });
+}]);;
+angular.module('ci.common',['ci.common.services']);
+
+// Init sub-modules
+angular.module('ci.common.services',[]);;
+/**
+ * A service for interacting with Google Analytics.
+ */
+angular.module('ci.common.services').
+factory('AnalyticsService', ['$window', function($window) {
+    return {
+        /**
+         * Track a pageview with Google Analytics
+         * @param  {string} path URL path
+         */
+        track: function(path) {
+            if (path === '') {
+                path = '/';
+            }
+            
+            $window.ga(function() {
+                $window.ga('send', 'pageview', {
+                    page: path
+                    // 'title': 'my overridden page'
+                });
+            });
+            
+        }
+    };
 }]);;
 angular.module('ci.countries',['ci.countries.controllers',
                                'ci.countries.directives',
