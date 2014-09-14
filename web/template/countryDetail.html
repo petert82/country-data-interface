@@ -153,6 +153,6 @@
     <div class="col-md-4 fake-heading" ng-if="country.cca3">
         <img ng-src="/data/flags/{{ country.cca3.toLowerCase() }}.svg" alt="The flag of {{ country.name }}" class="img-responsive country-flag">
         
-        <map-view center="country.latlng" geo-json="geoData"></map-view>
+        <map-view ng-if="country.latlng.length" center="country.latlng" geo-json="geoData"></map-view>
     </div>
 </div>
