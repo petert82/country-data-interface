@@ -1,12 +1,22 @@
-<div class="panel panel-default">
+<div class="panel clickable" 
+     ng-class="{'panel-default': !isHovered, 'panel-info': isHovered}"
+     ng-mouseenter="isHovered = true"
+     ng-mouseleave="isHovered = false"
+     ng-click="select()">
     <div class="panel-heading">
-        <h3 class="panel-title">{{country.name}} <button type="button" class="btn btn-default" ng-click="select()"><i class="fa fa-search"></i></button></h3>
+        <div class="pull-right">
+            <button type="button" class="btn btn-default"><i class="fa fa-search"></i></button>
+        </div>
+        <div>
+            <h3 class="panel-title">
+                {{country.name.common}} <br>
+                <small ng-if="country.name.native.common">({{country.name.native.common}})</small>
+                <small ng-if="!country.name.native.common">&nbsp;</small>
+            </h3>
+        </div>
     </div>
     <table class="table">
         <tbody>
-            <tr ng-if="country.nativeName.length">
-                <th colspan="2">({{country.nativeName}})</th>
-            </tr>
             <tr>
                 <th>Country Code (Alpha 2)</th>
                 <td>{{country.cca2}}</td>
@@ -27,8 +37,8 @@
                 <td><span class="comma-list" ng-repeat="code in country.callingCode">{{code}}</span></td>
             </tr>
             <tr>
-                <th>Language<span ng-show="country.languageCodes.length > 1">s</span></th>
-                <td><span class="comma-list" ng-repeat="l in country.languageCodes">{{l}}</span></td>
+                <th>Language<span ng-show="country.languages.length > 1">s</span></th>
+                <td><span class="comma-list" ng-repeat="(l, name) in country.languages">{{l}}</span></td>
             </tr>
         </tbody>
     </table>

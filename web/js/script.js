@@ -61,7 +61,8 @@ controller('CountryDetailController', ['$scope', '$routeParams', 'CountryService
     CountryService.find($routeParams.cca3).then(function(country) {
         $scope.country = country;
         $scope.country.osmUrl = getOsmUrl();
-        $scope.page.setTitle($scope.country.name);
+        $scope.country.hasLanguages = hasLanguages();
+        $scope.page.setTitle($scope.country.name.common);
     });
     
     // Load the country's GeoJSON data
@@ -87,6 +88,14 @@ controller('CountryDetailController', ['$scope', '$routeParams', 'CountryService
         
         return "http://www.openstreetmap.org/#map=5/"+lat+"/"+lng;
     };
+    
+    /**
+     * Indicates whether the current country has at least one language.
+     * @return {Boolean} True if the country has at least one language.
+     */
+    var hasLanguages = function() {
+        return !(angular.equals($scope.country.languages, {}) || angular.equals($scope.country.languages, []));
+    };
 }]);;
 angular.module('ci.countries.controllers').
 controller('CountryIndexController', ['$scope', '$location', '$routeParams', 'CountryService', 
@@ -103,6 +112,10 @@ controller('CountryIndexController', ['$scope', '$location', '$routeParams', 'Co
             $scope.countries = list;
         });
         
+        /**
+         * Show the detail view for the given country.
+         * @param  {Object} country Country to show detail for.
+         */
         $scope.showDetail = function(country) {
             $location.path('/country/'+country.cca3);
         };
@@ -119,6 +132,20 @@ directive('countrySummary', [function() {
             select: '&onSelect'
         },
         templateUrl: '/template/countrySummaryDirective.html'
+    };
+}]);;
+angular.module('ci.countries.filters').
+filter('ifEmpty', [function() {
+    return function(input, alt) {
+        if (typeof input === 'undefined') {
+            return alt;
+        }
+        
+        if (!input.length) {
+            return alt;
+        }
+        
+        return input;
     };
 }]);;
 angular.module('ci.countries.filters').
@@ -146,9 +173,9 @@ filter('search', function() {
         
         angular.forEach(input, function(country) {
             
-            if (matches(country.name)) {
+            if (matches(country.name.common)) {
                 filtered.push(country);
-            } else if (matches(country.nativeName)) {
+            } else if (matches(country.name.native.common)) {
                 filtered.push(country);
             } else if (search.length <= 2 && matches(country.cca2)) {
                 filtered.push(country);
@@ -215,12 +242,30 @@ factory('CountryService', ['$http', '$q', function($http, $q) {
         findGeoData: function(cca3) {
             var deferred = $q.defer();
             
+            // Checks we have some geometery available, assumes the top-level object is a 
+            // FeatureCollection
+            var hasGeometry = function(data) {
+                if (typeof data.features === 'undefined') {
+                    return false;
+                }
+                
+                if (!data.features.length) {
+                    return false;
+                }
+                
+                if (typeof data.features[0].geometry === 'undefined') {
+                    return false;
+                }
+                
+                return true;
+            };
+            
             cca3 = cca3.toLowerCase();
             
             $http.
                 get('/data/geo/'+cca3+'.geo.json', {cache: true}).
                 success(function(data) {
-                    deferred.resolve(data);
+                    deferred.resolve(hasGeometry(data) ? data : null);
                 }).
                 error(function(data) {
                     deferred.resolve(null);
@@ -244,19 +289,29 @@ angular.module('ci.countries.directives').
 directive('mapView', ['$timeout', 'LeafletService', function($timeout, L) {
     /**
      * Add a GeoJSON layer to the given map.
-     * @param {Map}    map     A leaflet map.
-     * @param {Object} geoJson GeoJSON data.
+     * @param {Map}    map             A leaflet map.
+     * @param {Object} geoJson         GeoJSON data.
+     * @param {bool}   fitMapToFeature Should the map bounds be adjusted to fit the GeoJSON feature?
      */
-    var addGeoJsonLayer = function(map, geoJson) {
+    var addGeoJsonLayer = function(map, geoJson, fitMapToFeature) {
         var geoLayer;
         
         if (!map || !geoJson) {
             return null;
         }
         
-        // GeoJSON layer
-        geoLayer = L.geoJson().addTo(map);
-        geoLayer.addData(geoJson);
+        map.whenReady(function() {
+            geoLayer = L.geoJson().addTo(map);
+            geoLayer.addData(geoJson);
+                
+            if (fitMapToFeature) {
+                // This timeout is an attempt to avoid an issue where the map control becomes
+                // unresponsive.
+                $timeout(function() {
+                    map.fitBounds(geoLayer.getBounds());
+                }, 10);
+            }
+        });
         
         return geoLayer;
     };
@@ -276,12 +331,7 @@ directive('mapView', ['$timeout', 'LeafletService', function($timeout, L) {
             
             // Add GeoJSON, data when available
             scope.$watch('geoJson', function(geoJson) {
-                var geoLayer = addGeoJsonLayer(map, geoJson);
-                
-                // Zoom to fit country in view
-                if (geoLayer) {
-                    map.fitBounds(geoLayer.getBounds());
-                }
+                var geoLayer = addGeoJsonLayer(map, geoJson, true);
             });
             
             scope.mapHeight = 300;

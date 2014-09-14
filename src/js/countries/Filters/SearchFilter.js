@@ -23,9 +23,9 @@ filter('search', function() {
         
         angular.forEach(input, function(country) {
             
-            if (matches(country.name)) {
+            if (matches(country.name.common)) {
                 filtered.push(country);
-            } else if (matches(country.nativeName)) {
+            } else if (matches(country.name.native.common)) {
                 filtered.push(country);
             } else if (search.length <= 2 && matches(country.cca2)) {
                 filtered.push(country);

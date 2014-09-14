@@ -1,11 +1,11 @@
 <div class="row">
     <ol class="breadcrumb">
         <li><a href="/#/">Search</a></li>
-        <li class="active">{{ country.name }}</li>
+        <li class="active">{{ country.name.common }}</li>
     </ol>
     
     <div class="col-md-12">
-        <h1>{{ country.name }}</h1>
+        <h1>{{ country.name.common }}</h1>
     </div>
 </div>
 <div class="row">
@@ -15,12 +15,20 @@
             <table class="table table-bordered">
                 <tbody>
                     <tr>
-                        <th>Name</th>
-                        <td>{{country.name}}</td>
+                        <th>Common</th>
+                        <td>{{ country.name.common }}</td>
                     </tr>
                     <tr>
-                        <th>Native name</th>
-                        <td>{{ country.nativeName }}</td>
+                        <th>Official</th>
+                        <td>{{ country.name.official | ifEmpty:"—" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Common (Native)</th>
+                        <td>{{ country.name.native.common | ifEmpty:"—" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Official (Native)</th>
+                        <td>{{ country.name.native.official | ifEmpty:"—" }}</td>
                     </tr>
                     <tr>
                         <th>Alternative spellings</th>
@@ -42,27 +50,30 @@
             <table class="table table-bordered">
                 <tr>
                     <th>ISO 3166-1 alpha-2</th>
-                    <td>{{ country.cca2 }}</td>
+                    <td>{{ country.cca2 | ifEmpty:'—'}}</td>
                 </tr>
                 <tr>
                     <th>ISO 3166-1 alpha-3</th>
-                    <td>{{ country.cca3 }}</td>
+                    <td>{{ country.cca3 | ifEmpty:'—'}}</td>
                 </tr>
                 <tr>
                     <th>ISO 3166-1 numeric</th>
-                    <td>{{ country.ccn3 }}</td>
+                    <td>{{ country.ccn3 | ifEmpty:'—'}}</td>
                 </tr>
                 <tr>
                     <th>International calling code<span ng-show="country.callingCode.length > 1">s</span></th>
-                    <td><span ng-repeat="dialCode in country.callingCode" class="comma-list">{{ dialCode }}</span></td>
+                    <td><span ng-repeat="dialCode in country.callingCode" class="comma-list">{{ dialCode | ifEmpty:'—'}}</span></td>
                 </tr>
                 <tr>
                     <th>ISO 4217 currency code<span ng-show="country.currency.length > 1">s</span></th>
-                    <td><span ng-repeat="currency in country.currency" class="comma-list">{{ currency }}</span></td>
+                    <td>
+                        <span ng-repeat="currency in country.currency" class="comma-list">{{ currency | ifEmpty:'—' }}</span>
+                        <span ng-if="!country.currency.length">—</span>
+                    </td>
                 </tr>
                 <tr>
                     <th>Top level domain<span ng-show="country.tld.length > 1">s</span></th>
-                    <td><span ng-repeat="tld in country.tld" class="comma-list">{{ tld }}</span></td>
+                    <td><span ng-repeat="tld in country.tld" class="comma-list">{{ tld | ifEmpty:'—'}}</span></td>
                 </tr>
             </table>
         </div>
@@ -73,13 +84,19 @@
         <div class="table-responsive">
             <table class="table table-bordered">
                 <tbody>
-                    <tr>
-                        <th>ISO 639-1 code<span ng-show="country.languageCodes.length > 1">s</span></th>
-                        <td><span ng-repeat="langCode in country.languageCodes" class="comma-list">{{ langCode }}</span></td>
+                    <tr ng-if="country.nativeLanguage.length">
+                        <th>Native language</th>
+                        <td>{{ country.languages[country.nativeLanguage] }}</td>
                     </tr>
                     <tr>
-                        <th>Name<span ng-show="country.language.length > 1">s</span></th>
-                        <td><span ng-repeat="lang in country.language" class="comma-list">{{ lang }}</span></td>
+                        <th colspan="2">Languages</th>
+                    </tr>
+                    <tr ng-repeat="(code, lang) in country.languages">
+                        <th>{{ code }}</th>
+                        <td>{{ lang }}</td>
+                    </tr>
+                    <tr ng-if="!country.hasLanguages">
+                        <td colspan="2"><i>No language data available</i></td>
                     </tr>
                 </tbody>
             </table>
@@ -91,27 +108,33 @@
                 <tbody>
                     <tr>
                         <th>Region</th>
-                        <td>{{ country.region }}</td>
+                        <td>{{ country.region | ifEmpty: '—' }}</td>
                     </tr>
                     <tr>
                         <th>Subregion</th>
-                        <td>{{ country.subregion }}</td>
+                        <td>{{ country.subregion | ifEmpty: '—' }}</td>
                     </tr>
                     <tr>
                         <th>Capital</th>
-                        <td>{{ country.capital }}</td>
+                        <td>{{ country.capital | ifEmpty: '—' }}</td>
                     </tr>
                     <tr>
                         <th>Demonym</th>
-                        <td>{{ country.demonym }}</td>
+                        <td>{{ country.demonym | ifEmpty: '—' }}</td>
                     </tr>
                     <tr>
                         <th>Lat/Lng</th>
-                        <td><a ng-href="{{ country.osmUrl }}">{{country.latlng[0]}}, {{country.latlng[1]}}</a></td>
+                        <td>
+                            <a ng-if="country.latlng.length" ng-href="{{ country.osmUrl }}">{{country.latlng[0]}}, {{country.latlng[1]}}</a>
+                            <span ng-if="!country.latlng.length">—</span>
+                        </td>
                     </tr>
                     <tr ng-show="country.area > 0">
                         <th>Area</th>
-                        <td>{{ country.area }}km&#178;</td>
+                        <td>
+                            <span ng-if="country.area > 0">{{ country.area }}km&#178;</span>
+                            <span ng-if="!country.area">—</span>
+                        </td>
                     </tr>
                     <tr>
                         <th>Land borders</th>
@@ -119,7 +142,7 @@
                             <span ng-repeat="border in country.borders" class="comma-list" ng-if="country.borders.length">
                                 <a ng-href="/#/country/{{border}}">{{ border }}</a>
                             </span>
-                            <span ng-if="!country.borders.length">N/A</span>
+                            <span ng-if="!country.borders.length">—</span>
                         </td>
                     </tr>
                 </tbody>
@@ -128,8 +151,8 @@
     </div>
     
     <div class="col-md-4 fake-heading" ng-if="country.cca3">
-        <img ng-src="/data/flags/{{ country.cca3.toLowerCase() }}.svg" alt="{{ country.name }} flag" class="img-responsive country-flag">
+        <img ng-src="/data/flags/{{ country.cca3.toLowerCase() }}.svg" alt="The flag of {{ country.name }}" class="img-responsive country-flag">
         
-        <map-view center="country.latlng" geo-json="geoData"></map-view>
+        <map-view ng-if="country.latlng.length" center="country.latlng" geo-json="geoData"></map-view>
     </div>
 </div>

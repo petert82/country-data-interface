@@ -8,7 +8,8 @@ controller('CountryDetailController', ['$scope', '$routeParams', 'CountryService
     CountryService.find($routeParams.cca3).then(function(country) {
         $scope.country = country;
         $scope.country.osmUrl = getOsmUrl();
-        $scope.page.setTitle($scope.country.name);
+        $scope.country.hasLanguages = hasLanguages();
+        $scope.page.setTitle($scope.country.name.common);
     });
     
     // Load the country's GeoJSON data
@@ -33,5 +34,13 @@ controller('CountryDetailController', ['$scope', '$routeParams', 'CountryService
         zoomLevel = 5;
         
         return "http://www.openstreetmap.org/#map=5/"+lat+"/"+lng;
+    };
+    
+    /**
+     * Indicates whether the current country has at least one language.
+     * @return {Boolean} True if the country has at least one language.
+     */
+    var hasLanguages = function() {
+        return !(angular.equals($scope.country.languages, {}) || angular.equals($scope.country.languages, []));
     };
 }]);

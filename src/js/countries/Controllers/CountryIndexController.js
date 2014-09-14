@@ -13,6 +13,10 @@ controller('CountryIndexController', ['$scope', '$location', '$routeParams', 'Co
             $scope.countries = list;
         });
         
+        /**
+         * Show the detail view for the given country.
+         * @param  {Object} country Country to show detail for.
+         */
         $scope.showDetail = function(country) {
             $location.path('/country/'+country.cca3);
         };
