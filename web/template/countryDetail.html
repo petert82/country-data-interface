@@ -62,18 +62,24 @@
                 </tr>
                 <tr>
                     <th>International calling code<span ng-show="country.callingCode.length > 1">s</span></th>
-                    <td><span ng-repeat="dialCode in country.callingCode" class="comma-list">{{ dialCode | ifEmpty:'—'}}</span></td>
+                    <td>
+                        <span ng-repeat="dialCode in country.callingCode" class="comma-list">{{ dialCode }}</span>
+                        <span ng-if="!country.callingCode.length">—</span>
+                    </td>
                 </tr>
                 <tr>
                     <th>ISO 4217 currency code<span ng-show="country.currency.length > 1">s</span></th>
                     <td>
-                        <span ng-repeat="currency in country.currency" class="comma-list">{{ currency | ifEmpty:'—' }}</span>
+                        <span ng-repeat="currency in country.currency" class="comma-list">{{ currency }}</span>
                         <span ng-if="!country.currency.length">—</span>
                     </td>
                 </tr>
                 <tr>
                     <th>Top level domain<span ng-show="country.tld.length > 1">s</span></th>
-                    <td><span ng-repeat="tld in country.tld" class="comma-list">{{ tld | ifEmpty:'—'}}</span></td>
+                    <td>
+                        <span ng-repeat="tld in country.tld" class="comma-list">{{ tld }}</span>
+                        <span ng-if="!country.tld.length">—</span>
+                    </td>
                 </tr>
             </table>
         </div>
