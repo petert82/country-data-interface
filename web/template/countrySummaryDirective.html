@@ -30,15 +30,24 @@
                     <span ng-show="country.currency.length < 2">Currency</span>
                     <span ng-show="country.currency.length > 1">Currencies</span>
                 </th>
-                <td><span class="comma-list" ng-repeat="currency in country.currency">{{currency}}</span></td>
+                <td>
+                    <span class="comma-list" ng-repeat="currency in country.currency">{{currency}}</span>
+                    <span ng-if="!country.currency.length">—</span>
+                </td>
             </tr>
             <tr>
                 <th>Int. dial code<span ng-show="country.callingCode.length > 1">s</span></th>
-                <td><span class="comma-list" ng-repeat="code in country.callingCode">{{code}}</span></td>
+                <td>
+                    <span class="comma-list" ng-repeat="code in country.callingCode">{{code}}</span>
+                    <span ng-if="!country.callingCode.length">—</span>
+                </td>
             </tr>
             <tr>
                 <th>Language<span ng-show="country.languages.length > 1">s</span></th>
-                <td><span class="comma-list" ng-repeat="(l, name) in country.languages">{{l}}</span></td>
+                <td>
+                    <span class="comma-list" ng-repeat="(l, name) in country.languages">{{l}}</span>
+                    <span ng-if="country.languages.length === 0">—</span>
+                </td>
             </tr>
         </tbody>
     </table>
