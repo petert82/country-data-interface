@@ -84,6 +84,7 @@ angular.module('ci.countries.filters',[]);
 angular.module('ci.countries.services',[]);;
 angular.module('ci.countries.controllers').
 controller('CountryDetailController', ['$scope', '$routeParams', 'CountryService', function($scope, $routeParams, CountryService) {
+    $scope.state = 'loading';
     $scope.country = {};
     $scope.geoData = null;
     $scope.shouldShowTranslations = false;
@@ -94,6 +95,7 @@ controller('CountryDetailController', ['$scope', '$routeParams', 'CountryService
         $scope.country.osmUrl = getOsmUrl();
         $scope.country.hasLanguages = hasLanguages();
         $scope.page.setTitle($scope.country.name.common);
+        $scope.state = 'loaded';
     });
     
     // Load the country's GeoJSON data
@@ -131,6 +133,7 @@ controller('CountryDetailController', ['$scope', '$routeParams', 'CountryService
 angular.module('ci.countries.controllers').
 controller('CountryIndexController', ['$scope', '$location', '$routeParams', 'CountryService', 
     function($scope, $location, $routeParams, CountryService) {
+        $scope.state = 'loading';
         $scope.countries = [];
         
         if ($routeParams.search) {
@@ -141,6 +144,7 @@ controller('CountryIndexController', ['$scope', '$location', '$routeParams', 'Co
         
         CountryService.query().then(function(list) {
             $scope.countries = list;
+            $scope.state = 'loaded';
         });
         
         /**
