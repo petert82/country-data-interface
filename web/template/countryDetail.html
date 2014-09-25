@@ -1,14 +1,16 @@
-<div class="row">
+<div class="row" ng-cloak>
     <ol class="breadcrumb">
         <li><a href="/#/">Search</a></li>
         <li class="active">{{ country.name.common }}</li>
     </ol>
     
+    <p ng-show="state === 'loading'"><i>Loading...</i></p>
+    
     <div class="col-md-12">
         <h1>{{ country.name.common }}</h1>
     </div>
 </div>
-<div class="row">
+<div class="row" ng-cloak>
     <div class="col-md-4">
         <h2>Names</h2>
         <div class="table-responsive">
@@ -62,18 +64,24 @@
                 </tr>
                 <tr>
                     <th>International calling code<span ng-show="country.callingCode.length > 1">s</span></th>
-                    <td><span ng-repeat="dialCode in country.callingCode" class="comma-list">{{ dialCode | ifEmpty:'—'}}</span></td>
+                    <td>
+                        <span ng-repeat="dialCode in country.callingCode" class="comma-list">{{ dialCode }}</span>
+                        <span ng-if="!country.callingCode.length">—</span>
+                    </td>
                 </tr>
                 <tr>
                     <th>ISO 4217 currency code<span ng-show="country.currency.length > 1">s</span></th>
                     <td>
-                        <span ng-repeat="currency in country.currency" class="comma-list">{{ currency | ifEmpty:'—' }}</span>
+                        <span ng-repeat="currency in country.currency" class="comma-list">{{ currency }}</span>
                         <span ng-if="!country.currency.length">—</span>
                     </td>
                 </tr>
                 <tr>
                     <th>Top level domain<span ng-show="country.tld.length > 1">s</span></th>
-                    <td><span ng-repeat="tld in country.tld" class="comma-list">{{ tld | ifEmpty:'—'}}</span></td>
+                    <td>
+                        <span ng-repeat="tld in country.tld" class="comma-list">{{ tld }}</span>
+                        <span ng-if="!country.tld.length">—</span>
+                    </td>
                 </tr>
             </table>
         </div>

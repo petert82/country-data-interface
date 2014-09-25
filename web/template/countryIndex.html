@@ -7,6 +7,12 @@
     </div>
 </div>
 
+<div class="row" ng-show="state === 'loading'">
+    <div class="col-xs-12">
+        <p><i>Loading...</i></p>
+    </div>
+</div>
+
 <div class="row" ng-cloak>
     <div class="col-md-3 col-sm-4" ng-repeat="c in countries | search:searchTerm">
         <country-summary country="c" on-select="showDetail(c)"></country-summary>

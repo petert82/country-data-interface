@@ -1,6 +1,7 @@
 angular.module('ci.countries.controllers').
 controller('CountryIndexController', ['$scope', '$location', '$routeParams', 'CountryService', 
     function($scope, $location, $routeParams, CountryService) {
+        $scope.state = 'loading';
         $scope.countries = [];
         
         if ($routeParams.search) {
@@ -11,6 +12,7 @@ controller('CountryIndexController', ['$scope', '$location', '$routeParams', 'Co
         
         CountryService.query().then(function(list) {
             $scope.countries = list;
+            $scope.state = 'loaded';
         });
         
         /**
