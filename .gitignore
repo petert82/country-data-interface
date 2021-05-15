@@ -1,4 +1,1 @@
 node_modules/
-web/data/countries.json
-web/data/flags/*.svg
-web/data/geo/*.json
