@@ -13,12 +13,6 @@ Intended for use on [countries.petethompson.net][2], but should be usable anywhe
 To setup a usable version of this site:
 
 1. Clone this repo to your webserver and point its document root to the `web/` directory.
-2. From a copy of the [countries data][1]:
-    1. Copy the `countries.json` file to `web/data/`.
-    2. Copy all of the `data/*geo.json` files to `web/data/geo/`.
-    3. Copy all of the `data/*.svg` files to `web/data/flags`.
-3. If you'd have a Google Analytics code you'd like to use with the site, run `bin/deploy -g {Your tracking code here}`.
-4. There is no step four.
 
 ## Credits
 
