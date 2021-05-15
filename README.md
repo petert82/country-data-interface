@@ -13,7 +13,6 @@ Intended for use on [countries.petethompson.net][2], but should be usable anywhe
 To setup a usable version of this site:
 
 1. Clone this repo to your webserver and point its document root to the `web/` directory.
-2. If you have a Google Analytics code you'd like to use with the site, run `bin/deploy -g {Your tracking code here}`.
 
 ## Credits
 
