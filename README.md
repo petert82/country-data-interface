@@ -1,5 +1,7 @@
 # Country Data Interface
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/3b27b6e5-2f20-4b77-988d-e0b6bdce8004/deploy-status)](https://app.netlify.com/sites/countries-petethompson-net/deploys)
+
 ## About
 
 A web interface for viewing and searching the country data provided by [this project][1].
